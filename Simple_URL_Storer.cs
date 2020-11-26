@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 /*
 Plan:
@@ -32,15 +33,24 @@ namespace Simple_URL_Storer
         static void Main(string[] args)
         {
             Simple_URL_Storer main_program = new Simple_URL_Storer();
-            main_program.input_intake();
+            while (true)
+            {
+                Console.WriteLine("Enter 'e' to escape");
+                Console.Write("Name: ");
+                string name = Console.ReadLine();
+                Console.Write("URL: ");
+                string url = Console.ReadLine();
+                main_program.write_text(name, url);
+                if (name == "e" || url == "e")
+                {
+                    System.Environment.Exit(0);
+                }
+            }
         }
-        public void input_intake()
-        {
-            Console.Write("Name: ");
-            string name = Console.ReadLine();
-            Console.Write("URL: ");
-            string url = Console.ReadLine();
 
+        /*
+        public void input_intake(string name, string url)
+        {
             List<string> record = new List<string>() {
                 DateTime.Now.ToString("yyyy-MM-dd"), 
                 name, 
@@ -51,6 +61,47 @@ namespace Simple_URL_Storer
                 Console.WriteLine(record[i]);
             }
 
+        }
+        */
+        public void write_text(string name, string url)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "[record].txt");
+            if (!System.IO.File.Exists(path))
+            {
+                Console.WriteLine(" ");
+                Console.WriteLine("[*] Text file does not exist. Creating a new one.");
+                Console.WriteLine(" ");
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine("<<<< Record Text File >>>>");
+                }
+            }
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(" ");
+                sw.WriteLine(DateTime.Now.ToString("dd/MM/yyyy"));
+                sw.WriteLine(name);
+                sw.WriteLine(url);
+            }
+            string[] lines = System.IO.File.ReadAllLines(path);
+            // Ensures maximum number of records shown back is kept at 15 lines (5 Records).
+            if (lines.Length > 15)
+            {
+                for (int i = 15; i > 0; i--)
+                {
+                    string last_lines = lines[lines.Length - i];
+                    System.Console.WriteLine(last_lines);
+                }
+            }
+            else if (lines.Length < 15)
+            {
+                for (int i = lines.Length; i > 0; i--)
+                {
+                    string last_lines = lines[lines.Length - i];
+                    System.Console.WriteLine(last_lines);
+                }
+            }
+            Console.WriteLine(" ");
         }
     }
 }
