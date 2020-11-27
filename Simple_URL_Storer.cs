@@ -76,6 +76,31 @@ namespace Simple_URL_Storer
                     sw.WriteLine("<<<< Record Text File >>>>");
                 }
             }
+
+            System.IO.StreamReader file = new System.IO.StreamReader(path);
+            string line;
+            bool flag = false;
+            while ((line = file.ReadLine()) != null)
+            {
+                if (line.Contains("<<<<" + extract_domain(url) + ">>>>"))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            file.Close();
+            if (flag == false)
+            {
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    Console.WriteLine("[*] Domain Category Unavailable");
+                    Console.WriteLine("[+] Creating Domain Category");
+                    sw.WriteLine(" ");
+                    sw.WriteLine("<<<<" + extract_domain(url) + ">>>>");
+                    Console.WriteLine(" ");
+                }
+            }
+
             using (StreamWriter sw = File.AppendText(path))
             {
                 sw.WriteLine(" ");
@@ -102,6 +127,11 @@ namespace Simple_URL_Storer
                 }
             }
             Console.WriteLine(" ");
+        }
+        public string extract_domain(string url)
+        {
+            Uri myUri = new Uri(url);
+            return myUri.Host;
         }
     }
 }
