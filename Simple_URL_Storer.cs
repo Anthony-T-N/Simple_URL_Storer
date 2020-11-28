@@ -13,7 +13,7 @@ Plan:
 
 Record Example:
 
-===<Category>===
+====<Category>====
 
 XX/XX/2020
 <Title>
@@ -73,20 +73,23 @@ namespace Simple_URL_Storer
                 Console.WriteLine(" ");
                 using (StreamWriter sw = File.CreateText(path))
                 {
-                    sw.WriteLine("<<<< Record Text File >>>>");
+                    sw.WriteLine(" ");
+                    sw.WriteLine("=====================================<<<< Record Text File >>>>=====================================");
                 }
             }
 
             System.IO.StreamReader file = new System.IO.StreamReader(path);
             string line;
             bool flag = false;
+            int line_counter = 0;
             while ((line = file.ReadLine()) != null)
             {
-                if (line.Contains("<<<<" + extract_domain(url) + ">>>>"))
+                if (line.Contains("====<" + extract_domain(url) + ">===="))
                 {
                     flag = true;
                     break;
                 }
+                line_counter++;
             }
             file.Close();
             if (flag == false)
@@ -96,29 +99,42 @@ namespace Simple_URL_Storer
                     Console.WriteLine("[*] Domain Category Unavailable");
                     Console.WriteLine("[+] Creating Domain Category");
                     sw.WriteLine(" ");
-                    sw.WriteLine("<<<<" + extract_domain(url) + ">>>>");
+                    sw.WriteLine("====<" + extract_domain(url) + ">====");
                     Console.WriteLine(" ");
                 }
             }
-
-            using (StreamWriter sw = File.AppendText(path))
+            if (flag == true)
             {
-                sw.WriteLine(" ");
-                sw.WriteLine(DateTime.Now.ToString("dd/MM/yyyy"));
-                sw.WriteLine(name);
-                sw.WriteLine(url);
+                var text_lines = System.IO.File.ReadAllLines(path);
+                List<string> text_lines_list = new List<string>(text_lines);
+                text_lines_list.Insert(line_counter + 1, " ");
+                text_lines_list.Insert(line_counter + 2, DateTime.Now.ToString("dd/MM/yyyy"));
+                text_lines_list.Insert(line_counter + 3, name);
+                text_lines_list.Insert(line_counter + 4, url);
+                File.WriteAllLines(path, text_lines_list);
             }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(" ");
+                    sw.WriteLine(DateTime.Now.ToString("dd/MM/yyyy"));
+                    sw.WriteLine(name);
+                    sw.WriteLine(url);
+                }
+            }
+
             string[] lines = System.IO.File.ReadAllLines(path);
             // Ensures maximum number of records shown back is kept at 15 lines (5 Records).
-            if (lines.Length > 15)
+            if (lines.Length > 30)
             {
-                for (int i = 15; i > 0; i--)
+                for (int i = 30; i > 0; i--)
                 {
                     string last_lines = lines[lines.Length - i];
                     System.Console.WriteLine(last_lines);
                 }
             }
-            else if (lines.Length < 15)
+            else if (lines.Length < 30)
             {
                 for (int i = lines.Length; i > 0; i--)
                 {
