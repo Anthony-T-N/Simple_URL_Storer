@@ -3,24 +3,34 @@ using System.Collections.Generic;
 using System.IO;
 
 /*
-Plan:
-- Ask for name/title.
+Planning / Design:
+- Ask user for name/title.
 - Ask for URL.
-- Optiona: Analyse category (Domain name).
+- Optional: Analyse category (Domain name).
 - Automatically add date above record.
 - Store both name and URL stored as a record in a persistent text file.
 - Each record is divided by space for easy viewing.
 
 Record Example:
 
-====<Category>====
+====<Domain Category>====
 
 XX/XX/2020
-<Title>
+<Recent Title>
 <URL>
 
 XX/XX/2020
-<Title>
+<Old Title>
+<URL>
+
+====<Domain Category - 2>====
+
+XX/XX/2020
+<Recent Title>
+<URL>
+
+XX/XX/2020
+<Old Title>
 <URL>
 
  */
@@ -36,24 +46,25 @@ namespace Simple_URL_Storer
             while (true)
             {
                 Console.WriteLine("Enter 'e' to escape");
-                Console.Write("Name: ");
-                string name = Console.ReadLine();
-                Console.Write("URL: ");
-                string url = Console.ReadLine();
-                main_program.write_text(name, url);
-                if (name == "e" || url == "e")
+                Console.Write("Desc: ");
+                string desc = Console.ReadLine();
+                if (desc == "e")
                 {
                     System.Environment.Exit(0);
                 }
+                Console.Write("URL: ");
+                string url = Console.ReadLine();
+                main_program.write_text(desc, url);
+                
             }
         }
 
         /*
-        public void input_intake(string name, string url)
+        public void input_intake(string desc, string url)
         {
             List<string> record = new List<string>() {
                 DateTime.Now.ToString("yyyy-MM-dd"), 
-                name, 
+                desc, 
                 url
             };
             for (int i = 0; i <= record.Count - 1; i++)
@@ -63,7 +74,7 @@ namespace Simple_URL_Storer
 
         }
         */
-        public void write_text(string name, string url)
+        public void write_text(string desc, string url)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[record].txt");
             if (!System.IO.File.Exists(path))
@@ -80,19 +91,19 @@ namespace Simple_URL_Storer
 
             System.IO.StreamReader file = new System.IO.StreamReader(path);
             string line;
-            bool flag = false;
+            bool domain_exist = false;
             int line_counter = 0;
             while ((line = file.ReadLine()) != null)
             {
                 if (line.Contains("====<" + extract_domain(url) + ">===="))
                 {
-                    flag = true;
+                    domain_exist = true;
                     break;
                 }
                 line_counter++;
             }
             file.Close();
-            if (flag == false)
+            if (domain_exist == false)
             {
                 using (StreamWriter sw = File.AppendText(path))
                 {
@@ -103,13 +114,13 @@ namespace Simple_URL_Storer
                     Console.WriteLine(" ");
                 }
             }
-            if (flag == true)
+            if (domain_exist == true)
             {
                 var text_lines = System.IO.File.ReadAllLines(path);
                 List<string> text_lines_list = new List<string>(text_lines);
                 text_lines_list.Insert(line_counter + 1, " ");
                 text_lines_list.Insert(line_counter + 2, DateTime.Now.ToString("dd/MM/yyyy"));
-                text_lines_list.Insert(line_counter + 3, name);
+                text_lines_list.Insert(line_counter + 3, desc);
                 text_lines_list.Insert(line_counter + 4, url);
                 File.WriteAllLines(path, text_lines_list);
             }
@@ -119,12 +130,16 @@ namespace Simple_URL_Storer
                 {
                     sw.WriteLine(" ");
                     sw.WriteLine(DateTime.Now.ToString("dd/MM/yyyy"));
-                    sw.WriteLine(name);
+                    sw.WriteLine(desc);
                     sw.WriteLine(url);
                 }
             }
 
             string[] lines = System.IO.File.ReadAllLines(path);
+
+            Console.WriteLine(" ");
+            Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
+
             // Ensures maximum number of records shown back is kept at 15 lines (5 Records).
             if (lines.Length > 30)
             {
