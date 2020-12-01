@@ -140,7 +140,32 @@ namespace Simple_URL_Storer
             Console.WriteLine(" ");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
 
+            /*
+            System.IO.StreamReader file = new System.IO.StreamReader(path);
+            while ((line = file.ReadLine()) != null)
+            {
+                if (line.Contains("====<" + extract_domain(url) + ">===="))
+                { 
+                    break;
+                }
+                line_counter++;
+            }
+            file.Close();
+            */
+            line_counter = 0;
+            for (int i = 0; i < lines.Length - 1; i++)
+            {
+                if (lines[i].Contains("====<" + extract_domain(url) + ">===="))
+                {
+                    break;
+                }
+                line_counter++;
+            }
+            Console.WriteLine(lines[line_counter]);
+
+
             // Ensures maximum number of records shown back is kept at 15 lines (5 Records).
+            /*
             if (lines.Length > 30)
             {
                 for (int i = 30; i > 0; i--)
@@ -157,6 +182,7 @@ namespace Simple_URL_Storer
                     System.Console.WriteLine(last_lines);
                 }
             }
+            */
             Console.WriteLine(" ");
         }
         public string extract_domain(string url)
