@@ -139,50 +139,30 @@ namespace Simple_URL_Storer
 
             Console.WriteLine(" ");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
-
-            /*
-            System.IO.StreamReader file = new System.IO.StreamReader(path);
-            while ((line = file.ReadLine()) != null)
-            {
-                if (line.Contains("====<" + extract_domain(url) + ">===="))
-                { 
-                    break;
-                }
-                line_counter++;
-            }
-            file.Close();
-            */
             line_counter = 0;
             for (int i = 0; i < lines.Length - 1; i++)
             {
-                if (lines[i].Contains("====<" + extract_domain(url) + ">===="))
+                if (lines[i].Contains("====<" + extract_domain(url) + ">====") && lines[i + 2].Contains(DateTime.Now.ToString("dd/MM/yyyy")) && lines[i + 3].Contains(desc) && lines[i + 4].Contains(url))
                 {
                     break;
                 }
                 line_counter++;
             }
-            Console.WriteLine(lines[line_counter]);
-
-
-            // Ensures maximum number of records shown back is kept at 15 lines (5 Records).
-            /*
-            if (lines.Length > 30)
+            if ((line_counter + 20) > lines.Length)
             {
-                for (int i = 30; i > 0; i--)
+                int difference = lines.Length - line_counter;
+                for (int i = 0; i < difference; i++)
                 {
-                    string last_lines = lines[lines.Length - i];
-                    System.Console.WriteLine(last_lines);
+                    Console.WriteLine(lines[line_counter + i]);
                 }
             }
-            else if (lines.Length < 30)
+            else
             {
-                for (int i = lines.Length; i > 0; i--)
+                for (int i = 0; i <= 20; i++)
                 {
-                    string last_lines = lines[lines.Length - i];
-                    System.Console.WriteLine(last_lines);
+                    Console.WriteLine(lines[line_counter + i]);
                 }
             }
-            */
             Console.WriteLine(" ");
         }
         public string extract_domain(string url)
