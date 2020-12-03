@@ -58,22 +58,6 @@ namespace Simple_URL_Storer
                 
             }
         }
-
-        /*
-        public void input_intake(string desc, string url)
-        {
-            List<string> record = new List<string>() {
-                DateTime.Now.ToString("yyyy-MM-dd"), 
-                desc, 
-                url
-            };
-            for (int i = 0; i <= record.Count - 1; i++)
-            {
-                Console.WriteLine(record[i]);
-            }
-
-        }
-        */
         public void write_text(string desc, string url)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[record].txt");
@@ -93,9 +77,10 @@ namespace Simple_URL_Storer
             string line;
             bool domain_exist = false;
             int line_counter = 0;
+            string domain_name = extract_domain(url);
             while ((line = file.ReadLine()) != null)
             {
-                if (line.Contains("====<" + extract_domain(url) + ">===="))
+                if (line.Contains("====<" + domain_name + ">===="))
                 {
                     domain_exist = true;
                     break;
@@ -134,15 +119,13 @@ namespace Simple_URL_Storer
                     sw.WriteLine(url);
                 }
             }
-
             string[] lines = System.IO.File.ReadAllLines(path);
-
             Console.WriteLine(" ");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
             line_counter = 0;
             for (int i = 0; i < lines.Length - 1; i++)
             {
-                if (lines[i].Contains("====<" + extract_domain(url) + ">====") && lines[i + 2].Contains(DateTime.Now.ToString("dd/MM/yyyy")) && lines[i + 3].Contains(desc) && lines[i + 4].Contains(url))
+                if (lines[i].Contains("====<" + domain_name + ">====") && lines[i + 2].Contains(DateTime.Now.ToString("dd/MM/yyyy")) && lines[i + 3].Contains(desc) && lines[i + 4].Contains(url))
                 {
                     break;
                 }
@@ -167,8 +150,16 @@ namespace Simple_URL_Storer
         }
         public string extract_domain(string url)
         {
-            Uri myUri = new Uri(url);
-            return myUri.Host;
+            try
+            {
+                Uri myUri = new Uri(url);
+                return myUri.Host;
+            }
+            catch
+            {
+                Console.WriteLine("Invalid URL: Placing in the 'Other' domain category");
+                return "Other";
+            }
         }
     }
 }
