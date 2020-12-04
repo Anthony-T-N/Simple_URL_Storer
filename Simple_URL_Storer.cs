@@ -35,7 +35,6 @@ XX/XX/2020
 
  */
 
-
 namespace Simple_URL_Storer
 {
     class Simple_URL_Storer
@@ -55,7 +54,6 @@ namespace Simple_URL_Storer
                 Console.Write("URL: ");
                 string url = Console.ReadLine();
                 main_program.write_text(desc, url);
-                
             }
         }
         public void write_text(string desc, string url)
@@ -72,15 +70,14 @@ namespace Simple_URL_Storer
                     sw.WriteLine("=====================================<<<< Record Text File >>>>=====================================");
                 }
             }
-
             System.IO.StreamReader file = new System.IO.StreamReader(path);
-            string line;
+            string read_lines;
             bool domain_exist = false;
             int line_counter = 0;
             string domain_name = extract_domain(url);
-            while ((line = file.ReadLine()) != null)
+            while ((read_lines = file.ReadLine()) != null)
             {
-                if (line.Contains("====<" + domain_name + ">===="))
+                if (read_lines.Contains("====<" + domain_name + ">===="))
                 {
                     domain_exist = true;
                     break;
@@ -96,12 +93,11 @@ namespace Simple_URL_Storer
                     Console.WriteLine("[+] Creating Domain Category");
                     sw.WriteLine(" ");
                     sw.WriteLine("====<" + extract_domain(url) + ">====");
-                    Console.WriteLine(" ");
                 }
             }
             if (domain_exist == true)
             {
-                var text_lines = System.IO.File.ReadAllLines(path);
+                string[] text_lines = System.IO.File.ReadAllLines(path);
                 List<string> text_lines_list = new List<string>(text_lines);
                 text_lines_list.Insert(line_counter + 1, " ");
                 text_lines_list.Insert(line_counter + 2, DateTime.Now.ToString("dd/MM/yyyy"));
@@ -119,31 +115,31 @@ namespace Simple_URL_Storer
                     sw.WriteLine(url);
                 }
             }
-            string[] lines = System.IO.File.ReadAllLines(path);
+            string[] lines_array = System.IO.File.ReadAllLines(path);
             Console.WriteLine(" ");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
             line_counter = 0;
-            for (int i = 0; i < lines.Length - 1; i++)
+            for (int i = 0; i < lines_array.Length - 1; i++)
             {
-                if (lines[i].Contains("====<" + domain_name + ">====") && lines[i + 2].Contains(DateTime.Now.ToString("dd/MM/yyyy")) && lines[i + 3].Contains(desc) && lines[i + 4].Contains(url))
+                if (lines_array[i].Contains("====<" + domain_name + ">====") && lines_array[i + 2].Contains(DateTime.Now.ToString("dd/MM/yyyy")) && lines_array[i + 3].Contains(desc) && lines_array[i + 4].Contains(url))
                 {
                     break;
                 }
                 line_counter++;
             }
-            if ((line_counter + 20) > lines.Length)
+            if ((line_counter + 20) > lines_array.Length)
             {
-                int difference = lines.Length - line_counter;
+                int difference = lines_array.Length - line_counter;
                 for (int i = 0; i < difference; i++)
                 {
-                    Console.WriteLine(lines[line_counter + i]);
+                    Console.WriteLine(lines_array[line_counter + i]);
                 }
             }
             else
             {
                 for (int i = 0; i <= 20; i++)
                 {
-                    Console.WriteLine(lines[line_counter + i]);
+                    Console.WriteLine(lines_array[line_counter + i]);
                 }
             }
             Console.WriteLine(" ");
