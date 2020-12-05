@@ -115,10 +115,14 @@ namespace Simple_URL_Storer
                     sw.WriteLine(url);
                 }
             }
+            read_back_text(path, domain_name, desc, url);
+        }
+        public void read_back_text(string path, string domain_name, string desc, string url)
+        {
             string[] lines_array = System.IO.File.ReadAllLines(path);
             Console.WriteLine(" ");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
-            line_counter = 0;
+            int line_counter = 0;
             for (int i = 0; i < lines_array.Length - 1; i++)
             {
                 if (lines_array[i].Contains("====<" + domain_name + ">====") && lines_array[i + 2].Contains(DateTime.Now.ToString("dd/MM/yyyy")) && lines_array[i + 3].Contains(desc) && lines_array[i + 4].Contains(url))
