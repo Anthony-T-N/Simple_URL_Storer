@@ -1,4 +1,4 @@
-using System;
+sing System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -44,19 +44,27 @@ namespace Simple_URL_Storer
             Simple_URL_Storer main_program = new Simple_URL_Storer();
             while (true)
             {
-                Console.WriteLine("Enter 'e' to escape");
+                bool i_flag = false;
+                Console.WriteLine("'e' to escape | 'i' to flag importance");
                 Console.Write("Desc: ");
                 string desc = Console.ReadLine();
                 if (desc == "e")
                 {
                     System.Environment.Exit(0);
                 }
+                if (desc == "i")
+                {
+                    i_flag = true;
+                    Console.WriteLine("[*] Important Flag On");
+                    Console.Write("Desc: ");
+                    desc = Console.ReadLine();
+                }
                 Console.Write("URL: ");
                 string url = Console.ReadLine();
-                main_program.write_text(desc, url);
+                main_program.write_text(desc, url, i_flag);
             }
         }
-        public void write_text(string desc, string url)
+        public void write_text(string desc, string url, bool i_flag)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[record].txt");
             if (!System.IO.File.Exists(path))
@@ -74,7 +82,16 @@ namespace Simple_URL_Storer
             string read_lines;
             bool domain_exist = false;
             int line_counter = 0;
-            string domain_name = extract_domain(url);
+            string domain_name;
+            if (i_flag == false)
+            {
+                domain_name = extract_domain(url);
+            }
+            else
+            {
+                domain_name = "Important";
+            }
+            
             while ((read_lines = file.ReadLine()) != null)
             {
                 if (read_lines.Contains("====<" + domain_name + ">===="))
@@ -92,7 +109,7 @@ namespace Simple_URL_Storer
                     Console.WriteLine("[*] Domain Category Unavailable");
                     Console.WriteLine("[+] Creating Domain Category");
                     sw.WriteLine(" ");
-                    sw.WriteLine("====<" + extract_domain(url) + ">====");
+                    sw.WriteLine("====<" + domain_name + ">====");
                 }
             }
             if (domain_exist == true)
@@ -133,8 +150,8 @@ namespace Simple_URL_Storer
             }
             if ((line_counter + 20) > lines_array.Length)
             {
-                int difference = lines_array.Length - line_counter;
-                for (int i = 0; i < difference; i++)
+                int line_difference = lines_array.Length - line_counter;
+                for (int i = 0; i < line_difference; i++)
                 {
                     Console.WriteLine(lines_array[line_counter + i]);
                 }
