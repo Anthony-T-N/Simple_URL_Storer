@@ -42,22 +42,35 @@ namespace Simple_URL_Storer
         static void Main(string[] args)
         {
             Simple_URL_Storer main_program = new Simple_URL_Storer();
+            bool i_flag = false;
             while (true)
             {
-                bool i_flag = false;
                 Console.WriteLine("'e' to escape | 'i' to flag importance");
                 Console.Write("Desc: ");
                 string desc = Console.ReadLine();
+                if (desc == "r")
+                {
+                    main_program.random_review();
+                    Console.WriteLine(" ");
+                    continue;
+                }
                 if (desc == "e")
                 {
                     System.Environment.Exit(0);
                 }
-                if (desc == "i")
+                if (desc == "i" && i_flag == false)
                 {
                     i_flag = true;
                     Console.WriteLine("[*] Important Flag On");
-                    Console.Write("Desc: ");
-                    desc = Console.ReadLine();
+                    Console.WriteLine(" ");
+                    continue;
+                }
+                else if (desc == "i" && i_flag == true)
+                {
+                    i_flag = false;
+                    Console.WriteLine("[*] Important Flag Off");
+                    Console.WriteLine(" ");
+                    continue;
                 }
                 Console.Write("URL: ");
                 string url = Console.ReadLine();
@@ -66,7 +79,7 @@ namespace Simple_URL_Storer
         }
         public void write_text(string desc, string url, bool i_flag)
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "[record].txt");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
             if (!System.IO.File.Exists(path))
             {
                 Console.WriteLine(" ");
@@ -176,6 +189,26 @@ namespace Simple_URL_Storer
             {
                 Console.WriteLine("Invalid URL: Placing in the 'Other' domain category");
                 return "Other";
+            }
+        }
+        public void random_review()
+        {
+            List<int> index_list = new List<int>();
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
+            string[] lines_array = System.IO.File.ReadAllLines(path);
+            for (int i = 0; i <= lines_array.Length - 1; i++)
+            {
+                if (lines_array[i].Contains("2020"))
+                {
+                    index_list.Add(i);
+                }
+            }
+            Random rnd = new Random();
+            int random_index = rnd.Next(0, index_list.Count);
+            random_index = index_list[random_index];
+            for (int i = random_index; i <= random_index + 2; i++)
+            {
+                Console.WriteLine(lines_array[i]);
             }
         }
     }
