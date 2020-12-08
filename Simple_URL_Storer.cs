@@ -45,11 +45,17 @@ namespace Simple_URL_Storer
             bool i_flag = false;
             while (true)
             {
-                Console.WriteLine("'e' to escape | 'i' to flag importance");
+                Console.WriteLine("'e' to escape | 'i' to flag importance | 'r' show random entry");
                 Console.Write("Desc: ");
                 string desc = Console.ReadLine();
+                if (desc == "d")
+                {
+                    main_program.delete_entry(0);
+                    System.Environment.Exit(0);
+                }
                 if (desc == "r")
                 {
+                    Console.WriteLine(" ");
                     main_program.random_review();
                     Console.WriteLine(" ");
                     continue;
@@ -195,6 +201,11 @@ namespace Simple_URL_Storer
         {
             List<int> index_list = new List<int>();
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
+            if (!System.IO.File.Exists(path))
+            {
+                Console.WriteLine("[*] Text file does not exist.");
+                return;
+            }
             string[] lines_array = System.IO.File.ReadAllLines(path);
             for (int i = 0; i <= lines_array.Length - 1; i++)
             {
@@ -209,6 +220,15 @@ namespace Simple_URL_Storer
             for (int i = random_index; i <= random_index + 2; i++)
             {
                 Console.WriteLine(lines_array[i]);
+            }
+        }
+        public void delete_entry(int entry_row)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
+            List<string> lines_list = new List<string>(System.IO.File.ReadAllLines(path));
+            for (int i = 0; i <= lines_list.Count - 1; i++)
+            {
+                Console.WriteLine(lines_list[i]);
             }
         }
     }
