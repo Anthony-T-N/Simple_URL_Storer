@@ -48,11 +48,6 @@ namespace Simple_URL_Storer
                 Console.WriteLine("'e' to escape | 'i' to flag importance | 'r' show random entry");
                 Console.Write("Desc: ");
                 string desc = Console.ReadLine();
-                if (desc == "d")
-                {
-                    main_program.delete_entry(0);
-                    System.Environment.Exit(0);
-                }
                 if (desc == "r")
                 {
                     Console.WriteLine(" ");
@@ -68,14 +63,14 @@ namespace Simple_URL_Storer
                 {
                     i_flag = true;
                     Console.WriteLine("[*] Important Flag On");
-                    Console.WriteLine(" ");
+                    Console.WriteLine("");
                     continue;
                 }
                 else if (desc == "i" && i_flag == true)
                 {
                     i_flag = false;
                     Console.WriteLine("[*] Important Flag Off");
-                    Console.WriteLine(" ");
+                    Console.WriteLine("");
                     continue;
                 }
                 Console.Write("URL: ");
@@ -110,7 +105,6 @@ namespace Simple_URL_Storer
             {
                 domain_name = "Important";
             }
-            
             while ((read_lines = file.ReadLine()) != null)
             {
                 if (read_lines.Contains("====<" + domain_name + ">===="))
@@ -133,8 +127,7 @@ namespace Simple_URL_Storer
             }
             if (domain_exist == true)
             {
-                string[] text_lines = System.IO.File.ReadAllLines(path);
-                List<string> text_lines_list = new List<string>(text_lines);
+                List<string> text_lines_list = new List<string>(System.IO.File.ReadAllLines(path));
                 text_lines_list.Insert(line_counter + 1, " ");
                 text_lines_list.Insert(line_counter + 2, DateTime.Now.ToString("dd/MM/yyyy"));
                 text_lines_list.Insert(line_counter + 3, desc);
@@ -209,7 +202,8 @@ namespace Simple_URL_Storer
             string[] lines_array = System.IO.File.ReadAllLines(path);
             for (int i = 0; i <= lines_array.Length - 1; i++)
             {
-                if (lines_array[i].Contains("2020"))
+                // Require pattern matching.
+                if (lines_array[i].Contains("/202"))
                 {
                     index_list.Add(i);
                 }
@@ -221,15 +215,28 @@ namespace Simple_URL_Storer
             {
                 Console.WriteLine(lines_array[i]);
             }
+            Console.WriteLine("");
+            Console.WriteLine("Delete Entry?");
+            string option = Console.ReadLine();
+            if (option == "y")
+            {
+                delete_entry(random_index);
+            }
+            else
+            {
+                return;
+            }
         }
         public void delete_entry(int entry_row)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
             List<string> lines_list = new List<string>(System.IO.File.ReadAllLines(path));
-            for (int i = 0; i <= lines_list.Count - 1; i++)
+            for (int i = entry_row; i <= entry_row + 3; i++)
             {
-                Console.WriteLine(lines_list[i]);
+                lines_list.RemoveAt(entry_row);
             }
+            File.WriteAllLines(path, lines_list);
+            Console.WriteLine("[+] Entry Deleted");
         }
     }
 }
