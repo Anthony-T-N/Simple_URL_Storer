@@ -50,9 +50,9 @@ namespace Simple_URL_Storer
                 string desc = Console.ReadLine();
                 if (desc == "r")
                 {
-                    Console.WriteLine(" ");
+                    Console.WriteLine("");
                     main_program.random_review();
-                    Console.WriteLine(" ");
+                    Console.WriteLine("");
                     continue;
                 }
                 if (desc == "e")
@@ -83,12 +83,12 @@ namespace Simple_URL_Storer
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
             if (!System.IO.File.Exists(path))
             {
-                Console.WriteLine(" ");
+                Console.WriteLine("");
                 Console.WriteLine("[*] Text file does not exist. Creating a new one.");
-                Console.WriteLine(" ");
+                Console.WriteLine("");
                 using (StreamWriter sw = File.CreateText(path))
                 {
-                    sw.WriteLine(" ");
+                    sw.WriteLine("");
                     sw.WriteLine("=====================================<<<< Record Text File >>>>=====================================");
                 }
             }
@@ -121,7 +121,7 @@ namespace Simple_URL_Storer
                 {
                     Console.WriteLine("[*] Domain Category Unavailable");
                     Console.WriteLine("[+] Creating Domain Category");
-                    sw.WriteLine(" ");
+                    sw.WriteLine("");
                     sw.WriteLine("====<" + domain_name + ">====");
                 }
             }
@@ -149,7 +149,7 @@ namespace Simple_URL_Storer
         public void read_back_text(string path, string domain_name, string desc, string url)
         {
             string[] lines_array = System.IO.File.ReadAllLines(path);
-            Console.WriteLine(" ");
+            Console.WriteLine("");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
             int line_counter = 0;
             for (int i = 0; i < lines_array.Length - 1; i++)
@@ -186,7 +186,7 @@ namespace Simple_URL_Storer
             }
             catch
             {
-                Console.WriteLine("Invalid URL: Placing in the 'Other' domain category");
+                Console.WriteLine("[*] Invalid URL: Placing in the 'Other' domain category");
                 return "Other";
             }
         }
@@ -196,21 +196,20 @@ namespace Simple_URL_Storer
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
             if (!System.IO.File.Exists(path))
             {
-                Console.WriteLine("[*] Text file does not exist.");
+                Console.WriteLine("[-] Text file does not exist.");
                 return;
             }
             string[] lines_array = System.IO.File.ReadAllLines(path);
             for (int i = 0; i <= lines_array.Length - 1; i++)
             {
-                // Require pattern matching.
+                // Requires better pattern matching.
                 if (lines_array[i].Contains("/202"))
                 {
                     index_list.Add(i);
                 }
             }
             Random rnd = new Random();
-            int random_index = rnd.Next(0, index_list.Count);
-            random_index = index_list[random_index];
+            int random_index = index_list[rnd.Next(0, index_list.Count)];
             for (int i = random_index; i <= random_index + 2; i++)
             {
                 Console.WriteLine(lines_array[i]);
@@ -220,16 +219,15 @@ namespace Simple_URL_Storer
             string option = Console.ReadLine();
             if (option == "y")
             {
-                delete_entry(random_index);
+                delete_entry(random_index, path);
             }
             else
             {
                 return;
             }
         }
-        public void delete_entry(int entry_row)
+        public void delete_entry(int entry_row, string path)
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
             List<string> lines_list = new List<string>(System.IO.File.ReadAllLines(path));
             for (int i = entry_row; i <= entry_row + 3; i++)
             {
