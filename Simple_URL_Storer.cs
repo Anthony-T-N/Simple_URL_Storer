@@ -45,9 +45,16 @@ namespace Simple_URL_Storer
             bool i_flag = false;
             while (true)
             {
-                Console.WriteLine("'e' to escape | 'i' to flag importance | 'r' show random entry");
+                Console.WriteLine("'e' to escape | 'i' to flag importance | 'r' show random entry | 's' to read all text");
                 Console.Write("Desc: ");
                 string desc = Console.ReadLine();
+                if (desc == "s")
+                {
+                    Console.WriteLine("");
+                    main_program.read_all_text();
+                    Console.WriteLine("");
+                    continue;
+                }
                 if (desc == "r")
                 {
                     Console.WriteLine("");
@@ -151,6 +158,7 @@ namespace Simple_URL_Storer
             string[] lines_array = System.IO.File.ReadAllLines(path);
             Console.WriteLine("");
             Console.WriteLine("=====================================<<<< Record Extract >>>>=====================================");
+            Console.WriteLine("");
             int line_counter = 0;
             for (int i = 0; i < lines_array.Length - 1; i++)
             {
@@ -215,7 +223,7 @@ namespace Simple_URL_Storer
                 Console.WriteLine(lines_array[i]);
             }
             Console.WriteLine("");
-            Console.WriteLine("Delete Entry?");
+            Console.WriteLine("Delete Entry? (y)");
             string option = Console.ReadLine();
             if (option == "y")
             {
@@ -235,6 +243,16 @@ namespace Simple_URL_Storer
             }
             File.WriteAllLines(path, lines_list);
             Console.WriteLine("[+] Entry Deleted");
+        }
+        public void read_all_text()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
+            if (!System.IO.File.Exists(path))
+            {
+                Console.WriteLine("[-] Text file does not exist.");
+                return;
+            }
+            Console.WriteLine(File.ReadAllText(path));
         }
     }
 }
