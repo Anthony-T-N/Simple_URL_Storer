@@ -45,7 +45,7 @@ namespace Simple_URL_Storer
             bool i_flag = false;
             while (true)
             {
-                Console.WriteLine("'e' to escape | 'i' to flag importance | 'r' show random entry | 's' to read all text | 'c' to clear double white-spacing");
+                Console.WriteLine("'e' to escape | 'i' to flag importance | 'r' show random entry | 's' to read all text | 'c' to clear double line white-spacing");
                 Console.Write("Desc: ");
                 string desc = Console.ReadLine();
                 if (desc == "c")
@@ -263,14 +263,16 @@ namespace Simple_URL_Storer
         }
         public void white_space_sort()
         {
-            // Remove all double white spacing.
+            // Remove all double line white spacing.
             string path = Path.Combine(Directory.GetCurrentDirectory(), "[url_record].txt");
             List<string> lines_list = new List<string>(System.IO.File.ReadAllLines(path));
             for (int i = 0; i <= lines_list.Count - 1; i++)
             {
+                Console.WriteLine(i);
+                // Out Of Range Error For Last Lines Here.
                 while (string.IsNullOrWhiteSpace(lines_list[i]) && string.IsNullOrWhiteSpace(lines_list[i + 1]))
                 {
-                    Console.WriteLine(lines_list[i - 1] + " " + lines_list[i] + " " + lines_list[i + 1]);
+                    Console.WriteLine("0)" + lines_list[i - 1] + " 1)" + lines_list[i] + " 2)" + lines_list[i + 1]);
                     lines_list.RemoveAt(i);
                 }
             }
